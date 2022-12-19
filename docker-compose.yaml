@@ -12,7 +12,7 @@ services:
       - db
     env_file:
       - .env
-    command: ["start --optimized"]
+    command: ["start"]
   db:
     image: postgres
     env_file:
