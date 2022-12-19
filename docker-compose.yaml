@@ -1,0 +1,25 @@
+version: '3'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.2
+    environment:
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_PROXY: edge
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db/keycloak
+    depends_on:
+      - db
+    env_file:
+      - .env
+    command: ["start --optimized"]
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: keycloak
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
