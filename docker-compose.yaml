@@ -12,6 +12,8 @@ services:
       - db
     env_file:
       - .env
+    ports:
+      - 8443:3000
     command: ["start"]
   db:
     image: postgres
