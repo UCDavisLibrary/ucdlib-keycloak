@@ -1,9 +1,9 @@
 version: '3'
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:21.1.2
+    image: quay.io/keycloak/keycloak:{{KC_TAG}}
     environment:
-      KC_HOSTNAME: auth.library.ucdavis.edu
+      KC_HOSTNAME: {{KC_HOSTNAME}}
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
       KC_PROXY: edge
@@ -14,10 +14,10 @@ services:
     env_file:
       - .env
     ports:
-      - 3122:8080
+      - {{KC_HOST_PORT}}:8080
     command: ["start"]
   db:
-    image: postgres:15.3
+    image: postgres:{{POSTGRES_TAG}}
     env_file:
       - .env
     volumes:
