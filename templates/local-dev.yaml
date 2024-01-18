@@ -1,0 +1,32 @@
+version: '3'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:{{KC_TAG}}
+    environment:
+      KC_DB: postgres
+      KC_DB_PASSWORD: postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_URL: jdbc:postgresql://db/postgres
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-{{KC_ADMIN_USERNAME}}}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-{{KC_ADMIN_PASSWORD}}}
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+      - ${KC_LOCAL_DEV_HOST_PORT:-{{KC_LOCAL_DEV_HOST_PORT}}}:8080
+    command: ["start-dev"]
+  db:
+    image: postgres:{{POSTGRES_TAG}}
+    environment:
+      POSTGRES_PASSWORD: postgres
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  adminer:
+    image: adminer:{{ADMINER_TAG}}
+    ports:
+      - ${ADMINER_HOST_PORT:-{{ADMINER_HOST_PORT}}}:8080
+volumes:
+  db-data:
