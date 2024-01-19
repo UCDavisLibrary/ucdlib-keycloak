@@ -10,7 +10,10 @@ services:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db/postgres
     depends_on:
-      - db
+      db:
+        condition: service_started
+      init:
+        condition: service_completed_successfully
     env_file:
       - .env
     ports:
@@ -22,5 +25,37 @@ services:
       - .env
     volumes:
       - db-data:/var/lib/postgresql/data
+  backup:
+    image: gcr.io/ucdlib-pubreg/auth-kc-utils:v1.0.0
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      PGHOST: 'db'
+      PGDATABASE: 'postgres'
+      PGPORT: 5432
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
+      GC_BACKUP_BUCKET: itis-iam/keycloak
+      BACKUP_FILE_NAME: db.sql.gz
+    volumes:
+      - ./gc-writer-key.json:/etc/service-account.json
+    command: ./backup/entrypoint.sh
+  init:
+    image: gcr.io/ucdlib-pubreg/auth-kc-utils:v1.0.0
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      PGHOST: 'db'
+      PGDATABASE: 'postgres'
+      PGPORT: 5432
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
+      GC_BACKUP_BUCKET: itis-iam/keycloak
+      BACKUP_FILE_NAME: db.sql.gz
+    volumes:
+      - ./gc-reader-key.json:/etc/service-account.json
+    command: ./init/init.sh
 volumes:
   db-data:
