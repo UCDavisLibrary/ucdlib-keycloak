@@ -10,7 +10,10 @@ services:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-{{KC_ADMIN_USERNAME}}}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-{{KC_ADMIN_PASSWORD}}}
     depends_on:
-      - db
+      db:
+        condition: service_started
+      init:
+        condition: service_completed_successfully
     env_file:
       - .env
     ports:
@@ -28,5 +31,48 @@ services:
     image: adminer:{{ADMINER_TAG}}
     ports:
       - ${ADMINER_HOST_PORT:-{{ADMINER_HOST_PORT}}}:8080
+  backup:
+    image: {{UTILS_IMAGE_NAME_TAG}}
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      # RUN_BACKUP: true
+      BACKUP_DATA_ENV: ${BACKUP_DATA_ENV:-localhost}
+      PGUSER: 'postgres'
+      PGHOST: 'db'
+      PGDATABASE: 'postgres'
+      PGPASSWORD: 'postgres'
+      PGPORT: 5432
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
+      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
+      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+    volumes:
+      - ../utils/backup:/kc-utils/backup
+      - ../gc-writer-key.json:/etc/service-account.json
+    # command: ./backup/entrypoint.sh
+    command: ./tail.sh
+  init:
+    image: {{UTILS_IMAGE_NAME_TAG}}
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      RUN_INIT: true
+      INIT_DATA_ENV: ${INIT_DATA_ENV:-localhost}
+      PGUSER: 'postgres'
+      PGHOST: 'db'
+      PGDATABASE: 'postgres'
+      PGPASSWORD: 'postgres'
+      PGPORT: 5432
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
+      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
+      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+    volumes:
+      - ../utils/init:/kc-utils/init
+      - ../gc-reader-key.json:/etc/service-account.json
+    command: ./init/init.sh
 volumes:
   db-data:

@@ -10,7 +10,10 @@ services:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db/postgres
     depends_on:
-      - db
+      db:
+        condition: service_started
+      init:
+        condition: service_completed_successfully
     env_file:
       - .env
     ports:
@@ -22,5 +25,37 @@ services:
       - .env
     volumes:
       - db-data:/var/lib/postgresql/data
+  backup:
+    image: {{UTILS_IMAGE_NAME_TAG}}
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      PGHOST: 'db'
+      PGDATABASE: 'postgres'
+      PGPORT: 5432
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
+      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
+      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+    volumes:
+      - ./gc-writer-key.json:/etc/service-account.json
+    command: ./backup/entrypoint.sh
+  init:
+    image: {{UTILS_IMAGE_NAME_TAG}}
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      PGHOST: 'db'
+      PGDATABASE: 'postgres'
+      PGPORT: 5432
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
+      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
+      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+    volumes:
+      - ./gc-reader-key.json:/etc/service-account.json
+    command: ./init/init.sh
 volumes:
   db-data:

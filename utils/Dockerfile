@@ -28,6 +28,18 @@ COPY backup backup
 COPY backup/cron /etc/cron.d/backup
 RUN chmod 0644 /etc/cron.d/backup
 
+# Init
+RUN mkdir data/init
+COPY init init
+
+# build tags
+ARG APP_VERSION
+ENV APP_VERSION ${APP_VERSION}
+ARG BUILD_NUM
+ENV BUILD_NUM ${BUILD_NUM}
+ARG BUILD_TIME
+ENV BUILD_TIME ${BUILD_TIME}
+
 WORKDIR /kc-utils
 ENTRYPOINT [ "bash", "-c" ]
 CMD ["echo 'Use command arg to specify a script to run.'"]
