@@ -20,10 +20,10 @@ REPO_TAG=v1.1.0
 
 # Keycloak
 KC_TAG=21.1.2
-KC_HOSTNAME=auth.library.ucdavis.edu
-KC_HOST_PORT=3122
-#KC_HOSTNAME=sandbox.auth.library.ucdavis.edu
-#KC_HOST_PORT=3123
+# KC_HOSTNAME=auth.library.ucdavis.edu
+# KC_HOST_PORT=3122
+KC_HOSTNAME=sandbox.auth.library.ucdavis.edu
+KC_HOST_PORT=3123
 
 # Postgres
 POSTGRES_TAG=15.3
