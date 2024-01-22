@@ -1,7 +1,7 @@
 version: '3'
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:21.1.2
+    image: quay.io/keycloak/keycloak:23.0.4
     environment:
       KC_HOSTNAME: auth.library.ucdavis.edu
       KC_HEALTH_ENABLED: true
