@@ -15,13 +15,17 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.1.0.${BUILD_NUM}
-REPO_TAG=v1.1.0
+APP_VERSION=v1.2.0.${BUILD_NUM}
+REPO_TAG=v1.2.0
 
 # Keycloak
-KC_TAG=21.1.2
+KC_TAG=23.0.4
+
+# Production Instance
 # KC_HOSTNAME=auth.library.ucdavis.edu
 # KC_HOST_PORT=3122
+
+# Sandbox Instance
 KC_HOSTNAME=sandbox.auth.library.ucdavis.edu
 KC_HOST_PORT=3123
 
