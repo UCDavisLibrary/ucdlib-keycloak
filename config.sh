@@ -15,8 +15,8 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.2.0.${BUILD_NUM}
-REPO_TAG=v1.2.0
+APP_VERSION=v1.2.1.${BUILD_NUM}
+REPO_TAG=v1.2.1
 
 # Keycloak
 KC_TAG=23.0.4
@@ -34,7 +34,7 @@ POSTGRES_TAG=15.3
 
 # Utils
 NODE_TAG=20
-UTILS_TAG=v1.0.0
+UTILS_TAG=v1.0.1
 BACKUP_FILE_NAME="db.sql.gz"
 GC_BACKUP_BUCKET="itis-iam/keycloak"
 
