@@ -1,0 +1,57 @@
+services:
+  keycloak-replica:
+    image: quay.io/keycloak/keycloak:23.0.4
+    environment:
+      KC_HOSTNAME: sandbox.auth.library.ucdavis.edu
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_PROXY: edge
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db-replica/postgres
+      # Read-only mode configuration
+      KC_TRANSACTION_XA_ENABLED: false
+    depends_on:
+      db-replica:
+        condition: service_started
+    env_file:
+      - .env
+    ports:
+      - 3124:8080
+    command: ["start"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+  db-replica:
+    image: postgres:15.3
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${KC_DB_USERNAME}
+      POSTGRES_DB: postgres
+      PGPASSWORD: ${POSTGRES_REPLICATION_PASSWORD}
+    volumes:
+      - db-replica-data:/var/lib/postgresql/data
+      - ./config/postgresql-replica.conf:/etc/postgresql/postgresql.conf
+    command: >
+      bash -c "
+      echo 'Waiting for primary database...' &&
+      until pg_isready -h ${PRIMARY_DB_HOST} -p 5432; do
+        echo 'Waiting for primary database to be ready...'
+        sleep 5
+      done &&
+      echo 'Primary database is ready. Checking replica status...' &&
+      if [ ! -f /var/lib/postgresql/data/PG_VERSION ]; then
+        echo 'Initializing replica from primary...'
+        PGPASSWORD=${POSTGRES_REPLICATION_PASSWORD} pg_basebackup -h ${PRIMARY_DB_HOST} -p 5432 -U replicator -D /var/lib/postgresql/data -v -P -W -R
+        echo 'primary_conninfo = ''host=${PRIMARY_DB_HOST} port=5432 user=replicator password=${POSTGRES_REPLICATION_PASSWORD}''' >> /var/lib/postgresql/data/postgresql.auto.conf
+      fi &&
+      echo 'Starting PostgreSQL replica...' &&
+      postgres -c config_file=/etc/postgresql/postgresql.conf
+      "
+    ports:
+      - "5433:5432"
+volumes:
+  db-replica-data:
