@@ -19,6 +19,39 @@ services:
     ports:
       - 3123:8080
     command: ["start"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+  keycloak-spare:
+    image: quay.io/keycloak/keycloak:23.0.4
+    environment:
+      KC_HOSTNAME: sandbox.auth.library.ucdavis.edu
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+      KC_PROXY: edge
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db/postgres
+    depends_on:
+      db:
+        condition: service_started
+      init:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    ports:
+      - 3124:8080
+    command: ["start"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    profiles:
+      - hot-spare
   db:
     image: postgres:15.3
     env_file:

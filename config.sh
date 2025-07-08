@@ -29,6 +29,10 @@ KC_TAG=23.0.4
 KC_HOSTNAME=sandbox.auth.library.ucdavis.edu
 KC_HOST_PORT=3123
 
+# Hot Spare Configuration
+ENABLE_HOT_SPARE=true
+KC_SPARE_HOST_PORT=3124
+
 # Postgres
 POSTGRES_TAG=15.3
 
