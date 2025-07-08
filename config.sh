@@ -29,6 +29,15 @@ KC_TAG=23.0.4
 KC_HOSTNAME=sandbox.auth.library.ucdavis.edu
 KC_HOST_PORT=3123
 
+# Hot Spare Configuration (Legacy single-VM)
+ENABLE_HOT_SPARE=false
+KC_SPARE_HOST_PORT=3124
+
+# Distributed HA Configuration
+ENABLE_DISTRIBUTED_HA=true
+REPLICA_KC_PORT=3124
+REPLICA_DB_PORT=5433
+
 # Postgres
 POSTGRES_TAG=15.3
 

@@ -1,9 +1,8 @@
-version: '3'
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:{{KC_TAG}}
+    image: quay.io/keycloak/keycloak:23.0.4
     environment:
-      KC_HOSTNAME: {{KC_HOSTNAME}}
+      KC_HOSTNAME: sandbox.auth.library.ucdavis.edu
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
       KC_PROXY: edge
@@ -17,7 +16,7 @@ services:
     env_file:
       - .env
     ports:
-      - {{KC_HOST_PORT}}:8080
+      - 3123:8080
     command: ["start"]
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
@@ -25,41 +24,27 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-  keycloak-spare:
-    image: quay.io/keycloak/keycloak:{{KC_TAG}}
-    environment:
-      KC_HOSTNAME: {{KC_HOSTNAME}}
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
-      KC_PROXY: edge
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://db/postgres
-    depends_on:
-      db:
-        condition: service_started
-      init:
-        condition: service_completed_successfully
-    env_file:
-      - .env
-    ports:
-      - {{KC_SPARE_HOST_PORT}}:8080
-    command: ["start"]
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    profiles:
-      - hot-spare
   db:
-    image: postgres:{{POSTGRES_TAG}}
+    image: postgres:15.3
     env_file:
       - .env
+    environment:
+      # Standard PostgreSQL environment
+      POSTGRES_USER: ${KC_DB_USERNAME}
+      POSTGRES_DB: postgres
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./config/init-primary.sh:/docker-entrypoint-initdb.d/init-primary.sh
+    command: >
+      postgres
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c hba_file=/etc/postgresql/pg_hba.conf
+    ports:
+      - "5432:5432"
   backup:
-    image: {{UTILS_IMAGE_NAME_TAG}}
+    image: gcr.io/ucdlib-pubreg/auth-kc-utils:v1.0.1
     env_file:
       - .env
     depends_on:
@@ -69,13 +54,13 @@ services:
       PGDATABASE: 'postgres'
       PGPORT: 5432
       GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
-      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
-      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+      GC_BACKUP_BUCKET: itis-iam/keycloak
+      BACKUP_FILE_NAME: db.sql.gz
     volumes:
       - ./gc-writer-key.json:/etc/service-account.json
     command: ./backup/entrypoint.sh
   init:
-    image: {{UTILS_IMAGE_NAME_TAG}}
+    image: gcr.io/ucdlib-pubreg/auth-kc-utils:v1.0.1
     env_file:
       - .env
     depends_on:
@@ -85,8 +70,8 @@ services:
       PGDATABASE: 'postgres'
       PGPORT: 5432
       GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
-      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
-      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+      GC_BACKUP_BUCKET: itis-iam/keycloak
+      BACKUP_FILE_NAME: db.sql.gz
     volumes:
       - ./gc-reader-key.json:/etc/service-account.json
     command: ./init/init.sh
