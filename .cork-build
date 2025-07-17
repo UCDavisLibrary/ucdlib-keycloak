@@ -1,0 +1,12 @@
+{
+  "registry" : "us-west1-docker.pkg.dev/digital-ucdavis-edu/pub",
+
+  "images" : {
+    "ucdlib-keycloak" : {
+      "contextPath" : "./services/keycloak"
+    },
+    "ucdlib-iam-support-utils" : {
+      "contextPath" : "./services/utils"
+    }
+  }
+}
