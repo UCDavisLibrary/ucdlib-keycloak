@@ -14,7 +14,7 @@
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
                     <div class="${properties.kcInputGroup!} field-container">
-                        <input type="password" id="password-new" name="password-new" class="${properties.kcInputClass!}"
+                        <input type="password" id="password-new" name="password" class="${properties.kcInputClass!}"
                                autofocus autocomplete="new-password"
                                aria-invalid="<#if messagesPerField.existsError('password','password-confirm')>true</#if>"
                         />
