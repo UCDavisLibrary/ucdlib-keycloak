@@ -1,0 +1,2 @@
+x-variables:
+  main-image: &main-image localhost/local-dev/ucdlib-keycloak:local-dev

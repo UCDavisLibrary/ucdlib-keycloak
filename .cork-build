@@ -5,7 +5,7 @@
     "ucdlib-keycloak" : {
       "contextPath" : "./services/keycloak"
     },
-    "ucdlib-iam-support-utils" : {
+    "ucdlib-keycloak-utils" : {
       "contextPath" : "./services/utils"
     }
   }
