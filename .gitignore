@@ -3,3 +3,5 @@ test
 gc-reader-key.json
 gc-writer-key.json
 keycloak-local-dev
+secrets
+.DS_Store

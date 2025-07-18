@@ -8,4 +8,6 @@ set -e
 CMDS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $CMDS_DIR/..
 
-gcloud secrets versions access latest --secret=itis-iam-support-reader-key > gc-reader-key.json
+mkdir -p secrets
+cd secrets
+gcloud --project=digital-ucdavis-edu secrets versions access latest --secret=itis-iam-support-reader-key > gc-reader-key.json
