@@ -1,5 +1,7 @@
 FROM quay.io/keycloak/keycloak:23.0.4 as keycloak
 
+COPY themes/ucd-theme /opt/keycloak/themes/ucd-theme
+
 # Generate a self-signed certificate for Localdev
 # Otherwise, UCD CAS will not work as an IDP
 RUN keytool -genkeypair \
