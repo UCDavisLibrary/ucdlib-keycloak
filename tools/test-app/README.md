@@ -60,7 +60,30 @@ Or modify the values directly in `config.js`.
 
 ## Usage
 
-### Build and Start the Application
+### Quick Start with Convenience Script
+
+The easiest way to start the application is using the provided convenience script:
+
+```bash
+# Basic usage with required arguments
+./start.sh <KC_REALM> <KC_CLIENT_ID> [PORT]
+
+# Example:
+./start.sh master auth-tester 3001
+
+# With default port (3001):
+./start.sh master auth-tester
+```
+
+The script will:
+- Validate that KC_REALM and KC_CLIENT_ID are provided
+- Set the environment variables
+- Display the configuration
+- Start the application
+
+### Manual Build and Start
+
+You can also build and start the application manually:
 
 ```bash
 # Build for production and start server
