@@ -8,8 +8,8 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
-// Serve static files from public directory
-app.use(express.static(join(__dirname, 'public')));
+// Serve static files from dist directory
+app.use(express.static(join(__dirname, 'dist')));
 
 // API endpoint to get configuration
 app.get('/api/config', (req, res) => {
@@ -36,17 +36,17 @@ app.get('/health', (req, res) => {
 
 // Default route - serve the main page
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'index.html'));
+  res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
 // Start the server
 const { port, host } = config.server;
 app.listen(port, host, () => {
-  console.log(`🚀 UC Davis Library Keycloak Auth Tester`);
-  console.log(`📍 Server running at http://${host}:${port}`);
-  console.log(`🔐 Keycloak URL: ${config.keycloak.url}`);
-  console.log(`🏛️  Realm: ${config.keycloak.realm}`);
-  console.log(`👤 Client ID: ${config.keycloak.clientId}`);
-  console.log(`\n💡 Make sure to configure a public client in your Keycloak admin console`);
-  console.log(`   with redirect URI: http://${host}:${port}/*`);
+  console.log(`UC Davis Library Keycloak Auth Tester`);
+  console.log(`Server running at http://${host}:${port}`);
+  console.log(`Keycloak URL: ${config.keycloak.url}`);
+  console.log(`Realm: ${config.keycloak.realm}`);
+  console.log(`Client ID: ${config.keycloak.clientId}`);
+  console.log(`\nMake sure to configure a public client in your Keycloak admin console`);
+  console.log(`with redirect URI: http://${host}:${port}/*`);
 });

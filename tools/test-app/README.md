@@ -1,6 +1,6 @@
 # UC Davis Library Keycloak Auth Tester
 
-A local development tool for testing Keycloak authentication and themed pages.
+A local development tool for testing Keycloak authentication and themed pages built with Lit web components.
 
 ## Purpose
 
@@ -13,7 +13,8 @@ This tool helps developers test Keycloak authentication flows and visualize toke
 
 ## Features
 
-- **ES Module Support**: Uses modern JavaScript import/export syntax
+- **Lit Web Components**: Modern web component architecture with reactive updates
+- **Webpack Build**: Bundled application with development and production modes
 - **Keycloak.js Integration**: Client-side authentication using the official Keycloak JavaScript adapter
 - **Token Inspection**: Displays access tokens, refresh tokens, and user information
 - **Configurable**: Easily configure Keycloak URL, realm, and client ID
@@ -24,7 +25,7 @@ This tool helps developers test Keycloak authentication flows and visualize toke
 ### 1. Install Dependencies
 
 ```bash
-cd tools
+cd tools/test-app
 npm install
 ```
 
@@ -59,14 +60,20 @@ Or modify the values directly in `config.js`.
 
 ## Usage
 
-### Start the Application
+### Build and Start the Application
 
 ```bash
-# Production mode
+# Build for production and start server
+npm run serve
+
+# Or build and start separately
+npm run build
 npm start
 
-# Development mode (with auto-restart)
+# Development mode (build with watch)
 npm run dev
+# Then in another terminal:
+npm start
 ```
 
 The application will be available at `http://localhost:3001` (or your configured port).
@@ -109,25 +116,22 @@ The application uses the following default configuration:
 
 You can override these settings using environment variables or by modifying `config.js`.
 
-## Troubleshooting
-
-### Common Issues
-
-1. **CORS Errors**: Make sure your Keycloak client has the correct web origins configured
-2. **Redirect URI Mismatch**: Ensure your redirect URIs include the application URL
-3. **SSL Certificate Issues**: For local development, you may need to accept self-signed certificates
-
-### Debug Information
-
-The application provides detailed error messages and logs authentication events to the browser console.
-
 ## Development
 
 This tool is built using:
 
+- **Lit**: Web components library for reactive UIs
+- **Webpack**: Module bundler and build system
 - **Express.js**: Web server framework
 - **Keycloak.js**: Official Keycloak JavaScript adapter
 - **ES Modules**: Modern JavaScript module syntax
+
+## Build Commands
+
+- `npm run build`: Build for production
+- `npm run dev`: Build for development with watch mode
+- `npm start`: Start the Express server
+- `npm run serve`: Build and start in one command
 
 ## API Endpoints
 
@@ -135,6 +139,19 @@ This tool is built using:
 - `GET /api/config`: Returns current configuration
 - `GET /api/user-info`: Placeholder for user information endpoint
 - `GET /health`: Health check endpoint
+
+## Troubleshooting
+
+### Common Issues
+
+1. **CORS Errors**: Make sure your Keycloak client has the correct web origins configured
+2. **Redirect URI Mismatch**: Ensure your redirect URIs include the application URL
+3. **SSL Certificate Issues**: For local development, you may need to accept self-signed certificates
+4. **Build Errors**: Make sure all dependencies are installed with `npm install`
+
+### Debug Information
+
+The application provides detailed error messages and logs authentication events to the browser console.
 
 ## License
 
