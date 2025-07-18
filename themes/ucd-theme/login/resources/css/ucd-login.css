@@ -1,0 +1,38 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.login-box,
+.reset-box {
+    max-width: 600px;
+    padding: 20px 40px 30px 40px;
+}
+
+.login-box .cas-login {
+    padding: 1rem 0 4rem 0;
+}
+
+.login-heading,
+.error-heading {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+
+.login-heading svg.library-icon,
+.error-heading svg.library-icon {
+    height: 100px;
+    margin-right: 1.5rem;
+}
+
+.actions .forgot-password,
+.actions .back-to-login {
+    flex-direction: row-reverse;
+    display: flex;
+    padding-top: .5rem;
+}

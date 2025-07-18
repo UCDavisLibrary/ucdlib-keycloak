@@ -1,0 +1,43 @@
+
+<#include "header.ftl">
+
+<div class="login-box">
+  <div class="login-heading">
+      <svg class="library-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 276.31 432.01"><path d="M102.37,337.79,148,325.38c13.66-3.71,24-17.44,24-31.94V121.15l-69.56-11Z" style="fill:#ffbf00"></path><path d="M171.94,87.9V0L24.87,31.15C10.69,34.15,0,47.81,0,63v302.7l69.55-18.93v-275Z" style="fill:#ffbf00"></path><path d="M250.56,100.25,171.94,87.9v33.26l71.49,11.24V393.6l-141-22.18V337.8l-32.84,8.94v25.48c0,15.3,11.3,29.06,25.72,31.33l181,28.46V131.58C276.27,116.28,265,102.52,250.56,100.25Z" style="fill:#022851"></path></svg>
+      <h2>Sign in to ${realm.displayName}</h2>
+  </div>
+  
+  <#if social?? && social.providers?has_content>
+    <#list social.providers as idp>
+      <#if idp.alias == "cas-oidc">
+        <div class="cas-login">
+          <p>UC Davis Faculty, Staff, and Students sign in:</p>
+          <a class="btn btn--block" href="${idp.loginUrl}">UC Davis CAS</a>
+        </div>
+      </#if>
+    </#list>
+  </#if>
+  
+  <hr class="divider"/>
+
+  <p>External affiliates sign in:</p>
+
+  <form action="${url.loginAction}" method="post">
+      <div class="field-container">
+          <label for="username">Username or Email</label>
+          <input id="username" name="username" type="text" placeholder="Enter Username or Email">
+      </div>
+      <div class="field-container">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" name="password" placeholder="Enter Password"/>
+      </div>
+      <div class="actions">
+        <input class="btn btn--block" type="submit" value="Sign In" />
+        <#if realm.resetPasswordAllowed>
+          <a href="${url.loginResetCredentialsUrl}" class="forgot-password">Forgot Password?</a>
+        </#if>
+      </div>
+  </form>    
+</div>
+
+<#include "footer.ftl">
