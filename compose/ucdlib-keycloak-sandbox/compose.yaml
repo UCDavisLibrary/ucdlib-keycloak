@@ -1,6 +1,6 @@
 x-variables:
-  main-image: &main-image localhost/local-dev/ucdlib-keycloak:sandbox
-  utils-image: &utils-image localhost/local-dev/ucdlib-keycloak-utils:sandbox
+  main-image: &main-image us-west1-docker.pkg.dev/digital-ucdavis-edu/pub/ucdlib-keycloak:sandbox
+  utils-image: &utils-image us-west1-docker.pkg.dev/digital-ucdavis-edu/pub/ucdlib-keycloak-utils:sandbox
 services:
   keycloak:
     image: *main-image
