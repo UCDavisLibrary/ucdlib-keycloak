@@ -1,26 +1,20 @@
 # Keyloak Deployment
 
-[Keycloak](https://www.keycloak.org/) is the Identity and Access Management system used by the UC Davis Library. It primarily acts as an identity broker for the UC Davis Central Authentication System (CAS).
+[Keycloak](https://www.keycloak.org/) is the Identity and Access Management system used by the UC Davis Library. It primarily acts as an identity broker for the UC Davis Central Authentication System (CAS), and is hosted at `auth.library` and `sandbox.auth.library`.
 
-After making any changes, you can deploy by following these steps:
-1. Check `config.sh` to ensure that everything looks good. 
-2. Run `./cmds/generate-deployment-files.sh`.
-3. Check changes into github and tag the release.
-4. ```ssh auth.library.ucdavis.edu```
-5. `cd /opt` and then into the version you are deploying - currently `prod` or `sandbox`.
-6. git pull either the tag or branch you need.
-7. `docker compose pull`
-8. If you made changes to the apache config, move it. `mv apache/keycloak.conf /etc/httpd/conf.d/prod.conf`
-9. Verify that your env file is good.
-10. `docker compose up -d`
+Configuration instructions and best practices can be found in this [Google Doc](https://docs.google.com/document/d/1Zd_Vv-hYuo-DX6bbNImLkH3DDAjCC3I-0ISgYZZ5lEs/edit?tab=t.0#heading=h.xxf2clu5zodi).
 
-## Env
+## Local Dev
+- `./cmds/get-reader-key.sh` to get Google Cloud (GC) key for data hydration service
+- `./cmds/get-env.sh local-dev` to download the env file.
+- Edit env file and remove any production-level credentials. For local host, most env variables are automatically set via the docker compose file.
+- `./build-local-dev.sh` to build local docker images
+- `cd compose/ucdlib-keycloak-local-dev` and `docker compose up -d`
 
-| Variable | Description | Required? |
-| -------- | ----------- | --------- |
-| KC_DB_USERNAME | PG user | Y |
-| KC_DB_PASSWORD | PG password | Y |
-| POSTGRES_PASSWORD | Same as above | Y |
-| KEYCLOAK_ADMIN | Creates KC admin user on start | Only use if setting up KC for first time |
-| KEYCLOAK_ADMIN_PASSWORD | KC admin user password created on start | Only use if setting up KC for first time |
+The keycloak instance will become available after the init container completes (`docker compose logs init -f`). Go to [https://localhost:8443](https://localhost:8443). You will have to accept the self-signed certificate in your browser. (https is required to use UCD CAS as an IDP).
 
+Since your permission level will be the same as the data environment set in the init container, you might need to elevate yourself to an admin. You can do this with `./cmds/promote-local-kc-user.sh <your kc username>`.
+
+If you need to test out auth flows or inspect tokens, you can use the application in `tools/test-app`.
+
+## Deployment

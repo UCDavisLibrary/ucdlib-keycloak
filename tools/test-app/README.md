@@ -31,12 +31,16 @@ npm install
 
 ### 2. Configure Keycloak Client
 
-In your Keycloak admin console, create or use an existing OIDC public client
+In your Keycloak admin console, create or use an existing OIDC public client.
 
 ### 3. Environment Configuration
 
-You can configure the application using environment variables:
-Take note of the realm, client id, and the port of the redirect url (e.g. 3001 for http://localhost:3001)
+You can configure the application using environment variables.
+Take note of the realm, client id, and the port of the redirect url (e.g. 3001 for http://localhost:3001) when setting up in keycloak. You will pass in these variables at run time.
+
+### 4. Trusting Keycloak
+
+The local keycloak instance uses a self-signed cert, so you have to opt in. In your browser, go to https://localhost:8443 and accept the risk and continue if you haven't done that already in the previous step.
 
 ## Usage
 
