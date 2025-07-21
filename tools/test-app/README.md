@@ -31,32 +31,12 @@ npm install
 
 ### 2. Configure Keycloak Client
 
-In your Keycloak admin console, create a public client with these settings:
-
-- **Client ID**: `auth-tester` (or customize in config.js)
-- **Client Type**: OpenID Connect
-- **Client authentication**: Off (public client)
-- **Standard flow**: Enabled
-- **Direct access grants**: Enabled (optional)
-- **Valid redirect URIs**: `http://localhost:3001/*`
-- **Web origins**: `http://localhost:3001`
+In your Keycloak admin console, create or use an existing OIDC public client
 
 ### 3. Environment Configuration
 
 You can configure the application using environment variables:
-
-```bash
-# Keycloak configuration
-export KC_URL=https://localhost:8443
-export KC_REALM=master
-export KC_CLIENT_ID=auth-tester
-
-# Server configuration
-export PORT=3001
-export HOST=localhost
-```
-
-Or modify the values directly in `config.js`.
+Take note of the realm, client id, and the port of the redirect url (e.g. 3001 for http://localhost:3001)
 
 ## Usage
 

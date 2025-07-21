@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { when } from 'lit/directives/when.js';
+import Keycloak from 'keycloak-js';
 
 class KeycloakAuthTester extends LitElement {
   static styles = css`
@@ -11,41 +12,41 @@ class KeycloakAuthTester extends LitElement {
       padding: 20px;
       background-color: #f5f5f5;
     }
-    
+
     .container {
       background: white;
       padding: 30px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    
+
     h1 {
       color: #002855;
       border-bottom: 3px solid #ffbf00;
       padding-bottom: 10px;
     }
-    
+
     .auth-section {
       margin: 30px 0;
       padding: 20px;
       background: #f8f9fa;
       border-radius: 6px;
     }
-    
+
     .config-section {
       margin: 30px 0;
       padding: 20px;
       background: #e9ecef;
       border-radius: 6px;
     }
-    
+
     .token-section {
       margin: 30px 0;
       padding: 20px;
       background: #d4edda;
       border-radius: 6px;
     }
-    
+
     button {
       background: #002855;
       color: white;
@@ -56,24 +57,24 @@ class KeycloakAuthTester extends LitElement {
       font-size: 16px;
       margin: 10px 10px 10px 0;
     }
-    
+
     button:hover {
       background: #004080;
     }
-    
+
     button:disabled {
       background: #ccc;
       cursor: not-allowed;
     }
-    
+
     .logout-btn {
       background: #dc3545;
     }
-    
+
     .logout-btn:hover {
       background: #c82333;
     }
-    
+
     .info-box {
       background: #d1ecf1;
       border: 1px solid #bee5eb;
@@ -81,7 +82,7 @@ class KeycloakAuthTester extends LitElement {
       padding: 15px;
       margin: 15px 0;
     }
-    
+
     .error-box {
       background: #f8d7da;
       border: 1px solid #f5c6cb;
@@ -89,7 +90,7 @@ class KeycloakAuthTester extends LitElement {
       padding: 15px;
       margin: 15px 0;
     }
-    
+
     .token-display {
       background: #f8f9fa;
       border: 1px solid #dee2e6;
@@ -101,30 +102,30 @@ class KeycloakAuthTester extends LitElement {
       word-break: break-all;
       white-space: pre-wrap;
     }
-    
+
     .status {
       font-weight: bold;
       margin: 10px 0;
     }
-    
+
     .authenticated {
       color: #28a745;
     }
-    
+
     .unauthenticated {
       color: #dc3545;
     }
-    
+
     .config-item {
       margin: 10px 0;
     }
-    
+
     .config-label {
       font-weight: bold;
       display: inline-block;
       width: 120px;
     }
-    
+
     .config-value {
       font-family: monospace;
       background: #f8f9fa;
@@ -158,13 +159,12 @@ class KeycloakAuthTester extends LitElement {
       // Load configuration from server
       const response = await fetch('/api/config');
       this.config = await response.json();
-      
+
       // Load Keycloak
-      const Keycloak = window.Keycloak;
       if (!Keycloak) {
         throw new Error('Keycloak library not loaded');
       }
-      
+
       // Initialize Keycloak
       this.keycloak = new Keycloak({
         url: this.config.keycloak.url,
@@ -187,7 +187,7 @@ class KeycloakAuthTester extends LitElement {
 
       this.loading = false;
       this.requestUpdate();
-      
+
     } catch (error) {
       this.error = 'Failed to initialize Keycloak: ' + error.message;
       this.loading = false;
@@ -236,7 +236,7 @@ class KeycloakAuthTester extends LitElement {
 
   renderConfig() {
     if (!this.config) return html`Loading configuration...`;
-    
+
     return html`
       <div class="config-item">
         <span class="config-label">Keycloak URL:</span>
@@ -255,7 +255,7 @@ class KeycloakAuthTester extends LitElement {
 
   renderUserInfo() {
     if (!this.userInfo) return '';
-    
+
     return html`
       <p><strong>Username:</strong> ${this.userInfo.preferred_username || 'N/A'}</p>
       <p><strong>Email:</strong> ${this.userInfo.email || 'N/A'}</p>
@@ -266,20 +266,20 @@ class KeycloakAuthTester extends LitElement {
 
   renderTokens() {
     if (!this.authenticated || !this.keycloak) return '';
-    
+
     const accessTokenInfo = this.keycloak.tokenParsed;
     const refreshTokenInfo = this.keycloak.refreshTokenParsed;
-    
+
     return html`
       <h3>Access Token</h3>
       <div class="token-display">${JSON.stringify(accessTokenInfo, null, 2)}</div>
-      
+
       <h3>Raw Access Token</h3>
       <div class="token-display">${this.keycloak.token}</div>
-      
+
       <h3>Refresh Token Info</h3>
       <div class="token-display">${JSON.stringify(refreshTokenInfo, null, 2)}</div>
-      
+
       <h3>Token Timing</h3>
       <div class="token-display">
 Token expires in: ${Math.round(this.keycloak.tokenParsed.exp - Date.now() / 1000)} seconds
@@ -302,7 +302,7 @@ Refresh token expires in: ${Math.round(this.keycloak.refreshTokenParsed.exp - Da
     return html`
       <div class="container">
         <h1>UC Davis Library Keycloak Auth Tester</h1>
-        
+
         <div class="info-box">
           <p><strong>Purpose:</strong> This tool is designed for local development testing of Keycloak authentication and themed pages.</p>
           <p><strong>Setup:</strong> Make sure you have a public client configured in your Keycloak admin console with the redirect URI set to this application's URL.</p>
@@ -313,11 +313,11 @@ Refresh token expires in: ${Math.round(this.keycloak.refreshTokenParsed.exp - Da
           <div class="status ${this.authenticated ? 'authenticated' : 'unauthenticated'}">
             ${this.authenticated ? 'Authenticated' : 'Not authenticated'}
           </div>
-          
+
           ${when(this.authenticated, () => html`
             <div>${this.renderUserInfo()}</div>
           `)}
-          
+
           <div>
             ${when(!this.authenticated, () => html`
               <button @click="${this.handleLogin}">Login with Keycloak</button>

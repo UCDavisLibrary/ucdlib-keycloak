@@ -17,13 +17,14 @@ export default {
       template: './src/index.html',
       filename: 'index.html',
       inject: 'body'
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/silent-check-sso.html',
+      filename: 'silent-check-sso.html'
     })
   ],
   resolve: {
     extensions: ['.js']
   },
-  devtool: 'source-map',
-  externals: {
-    'keycloak-js': 'Keycloak'
-  }
+  devtool: 'source-map'
 };
