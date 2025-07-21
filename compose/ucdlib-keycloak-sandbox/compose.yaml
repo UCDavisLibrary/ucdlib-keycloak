@@ -1,9 +1,11 @@
-version: '3'
+x-variables:
+  main-image: &main-image us-west1-docker.pkg.dev/digital-ucdavis-edu/pub/ucdlib-keycloak:sandbox
+  utils-image: &utils-image us-west1-docker.pkg.dev/digital-ucdavis-edu/pub/ucdlib-keycloak-utils:sandbox
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:23.0.4
+    image: *main-image
     environment:
-      KC_HOSTNAME: sandbox.auth.library.ucdavis.edu
+      KC_HOSTNAME: ${KC_HOSTNAME:-sandbox.auth.library.ucdavis.edu}
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
       KC_PROXY: edge
@@ -17,7 +19,12 @@ services:
     env_file:
       - .env
     ports:
-      - 3123:8080
+      - ${KC_HOST_PORT:-3123}:8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     command: ["start"]
   db:
     image: postgres:15.3
@@ -26,12 +33,14 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
   backup:
-    image: gcr.io/ucdlib-pubreg/auth-kc-utils:v1.0.1
+    image: *utils-image
     env_file:
       - .env
     depends_on:
       - db
     environment:
+      RUN_BACKUP: ${RUN_BACKUP:-true}
+      BACKUP_DATA_ENV: ${BACKUP_DATA_ENV:-sandbox}
       PGHOST: 'db'
       PGDATABASE: 'postgres'
       PGPORT: 5432
@@ -39,15 +48,17 @@ services:
       GC_BACKUP_BUCKET: itis-iam/keycloak
       BACKUP_FILE_NAME: db.sql.gz
     volumes:
-      - ./gc-writer-key.json:/etc/service-account.json
+      - ../../secrets/gc-writer-key.json:/etc/service-account.json
     command: ./backup/entrypoint.sh
   init:
-    image: gcr.io/ucdlib-pubreg/auth-kc-utils:v1.0.1
+    image: *utils-image
     env_file:
       - .env
     depends_on:
       - db
     environment:
+      RUN_INIT: ${RUN_INIT:-true}
+      INIT_DATA_ENV: ${INIT_DATA_ENV:-sandbox}
       PGHOST: 'db'
       PGDATABASE: 'postgres'
       PGPORT: 5432
@@ -55,7 +66,7 @@ services:
       GC_BACKUP_BUCKET: itis-iam/keycloak
       BACKUP_FILE_NAME: db.sql.gz
     volumes:
-      - ./gc-reader-key.json:/etc/service-account.json
+      - ../../secrets/gc-reader-key.json:/etc/service-account.json
     command: ./init/init.sh
 volumes:
   db-data:

@@ -1,9 +1,11 @@
-version: '3'
+x-variables:
+  main-image: &main-image us-west1-docker.pkg.dev/digital-ucdavis-edu/pub/ucdlib-keycloak:v1.1.0
+  utils-image: &utils-image us-west1-docker.pkg.dev/digital-ucdavis-edu/pub/ucdlib-keycloak-utils:v1.1.0
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:{{KC_TAG}}
+    image: *main-image
     environment:
-      KC_HOSTNAME: {{KC_HOSTNAME}}
+      KC_HOSTNAME: ${KC_HOSTNAME:-auth.library.ucdavis.edu}
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
       KC_PROXY: edge
@@ -17,45 +19,54 @@ services:
     env_file:
       - .env
     ports:
-      - {{KC_HOST_PORT}}:8080
+      - ${KC_HOST_PORT:-3121}:8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     command: ["start"]
   db:
-    image: postgres:{{POSTGRES_TAG}}
+    image: postgres:15.3
     env_file:
       - .env
     volumes:
       - db-data:/var/lib/postgresql/data
   backup:
-    image: {{UTILS_IMAGE_NAME_TAG}}
+    image: *utils-image
     env_file:
       - .env
     depends_on:
       - db
     environment:
+      RUN_BACKUP: ${RUN_BACKUP:-true}
+      BACKUP_DATA_ENV: ${BACKUP_DATA_ENV:-blue}
       PGHOST: 'db'
       PGDATABASE: 'postgres'
       PGPORT: 5432
       GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
-      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
-      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+      GC_BACKUP_BUCKET: itis-iam/keycloak
+      BACKUP_FILE_NAME: db.sql.gz
     volumes:
-      - ./gc-writer-key.json:/etc/service-account.json
+      - ../../secrets/gc-writer-key.json:/etc/service-account.json
     command: ./backup/entrypoint.sh
   init:
-    image: {{UTILS_IMAGE_NAME_TAG}}
+    image: *utils-image
     env_file:
       - .env
     depends_on:
       - db
     environment:
+      RUN_INIT: ${RUN_INIT:-true}
+      INIT_DATA_ENV: ${INIT_DATA_ENV:-gold}
       PGHOST: 'db'
       PGDATABASE: 'postgres'
       PGPORT: 5432
       GOOGLE_APPLICATION_CREDENTIALS: /etc/service-account.json
-      GC_BACKUP_BUCKET: {{GC_BACKUP_BUCKET}}
-      BACKUP_FILE_NAME: {{BACKUP_FILE_NAME}}
+      GC_BACKUP_BUCKET: itis-iam/keycloak
+      BACKUP_FILE_NAME: db.sql.gz
     volumes:
-      - ./gc-reader-key.json:/etc/service-account.json
+      - ../../secrets/gc-reader-key.json:/etc/service-account.json
     command: ./init/init.sh
 volumes:
   db-data:
