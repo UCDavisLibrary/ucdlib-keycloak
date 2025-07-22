@@ -2,10 +2,10 @@
 export const config = {
   // Server configuration
   server: {
-    port: process.env.PORT || 3001,
+    port: process.env.PORT || 3000,
     host: process.env.HOST || 'localhost'
   },
-  
+
   // Default Keycloak configuration
   keycloak: {
     url: process.env.KC_URL || 'https://localhost:8443',
@@ -16,10 +16,10 @@ export const config = {
     // - Client ID: auth-tester
     // - Client Type: OpenID Connect
     // - Capability config: Standard flow enabled
-    // - Valid redirect URIs: http://localhost:3001/*
-    // - Web origins: http://localhost:3001
+    // - Valid redirect URIs: http://localhost:3000/*
+    // - Web origins: http://localhost:3000
   },
-  
+
   // UI configuration
   ui: {
     title: 'UC Davis Library Keycloak Auth Tester',

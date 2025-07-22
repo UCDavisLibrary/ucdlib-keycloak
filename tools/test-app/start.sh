@@ -12,10 +12,10 @@ if [ $# -lt 2 ]; then
     echo "  KC_CLIENT_ID  - Keycloak client ID"
     echo ""
     echo "Optional arguments:"
-    echo "  PORT          - Server port (default: 3001)"
+    echo "  PORT          - Server port (default: 3000)"
     echo ""
     echo "Example:"
-    echo "  $0 master auth-tester 3001"
+    echo "  $0 master auth-tester 3000"
     exit 1
 fi
 
@@ -32,7 +32,7 @@ fi
 echo "Starting Keycloak Auth Tester with:"
 echo "  KC_REALM: $KC_REALM"
 echo "  KC_CLIENT_ID: $KC_CLIENT_ID"
-echo "  PORT: ${PORT:-3001}"
+echo "  PORT: ${PORT:-3000}"
 echo ""
 
 # Start the application
