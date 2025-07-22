@@ -36,7 +36,7 @@ In your Keycloak admin console, create or use an existing OIDC public client.
 ### 3. Environment Configuration
 
 You can configure the application using environment variables.
-Take note of the realm, client id, and the port of the redirect url (e.g. 3001 for http://localhost:3001) when setting up in keycloak. You will pass in these variables at run time.
+Take note of the realm, client id, and the port of the redirect url (e.g. 3000 for http://localhost:3000) when setting up in keycloak. You will pass in these variables at run time.
 
 ### 4. Trusting Keycloak
 
@@ -55,7 +55,7 @@ The easiest way to start the application is using the provided convenience scrip
 # Example:
 ./start.sh master auth-tester 3001
 
-# With default port (3001):
+# With default port (3000):
 ./start.sh master auth-tester
 ```
 
@@ -83,7 +83,7 @@ npm run dev
 npm start
 ```
 
-The application will be available at `http://localhost:3001` (or your configured port).
+The application will be available at `http://localhost:3000` (or your configured port).
 
 ### Testing Authentication
 
@@ -110,7 +110,7 @@ The application uses the following default configuration:
 ```javascript
 {
   server: {
-    port: 3001,
+    port: 3000,
     host: 'localhost'
   },
   keycloak: {
