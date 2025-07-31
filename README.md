@@ -1,4 +1,4 @@
-# Keyloak Deployment
+# UC Davis Library Keycloak Instance
 
 [Keycloak](https://www.keycloak.org/) is the Identity and Access Management system used by the UC Davis Library. It primarily acts as an identity broker for the UC Davis Central Authentication System (CAS), and is hosted at `auth.library` and `sandbox.auth.library`.
 
@@ -8,7 +8,7 @@ Configuration instructions and best practices can be found in this [Google Doc](
 - `./cmds/get-reader-key.sh` to get Google Cloud (GC) key for data hydration service
 - `./cmds/get-env.sh local-dev` to download the env file.
 - Edit env file and remove any production-level credentials. For local host, most env variables are automatically set via the docker compose file.
-- `./build-local-dev.sh` to build local docker images
+- `./cmds/build-local-dev.sh` to build local docker images
 - `cd compose/ucdlib-keycloak-local-dev` and `docker compose up -d`
 
 The keycloak instance will become available after the init container completes (`docker compose logs init -f`). Go to [https://localhost:8443](https://localhost:8443). You will have to accept the self-signed certificate in your browser (https is required to use UCD CAS as an IDP).
