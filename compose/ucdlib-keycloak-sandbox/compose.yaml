@@ -5,10 +5,11 @@ services:
   keycloak:
     image: *main-image
     environment:
-      KC_HOSTNAME: ${KC_HOSTNAME:-sandbox.auth.library.ucdavis.edu}
+      KC_HOSTNAME: ${KC_HOSTNAME:-https://sandbox.auth.library.ucdavis.edu}
+      KC_PROXY_HEADERS: ${KC_PROXY_HEADERS:-xforwarded}
+      KC_HTTP_ENABLED: ${KC_HTTP_ENABLED:-true}
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
-      KC_PROXY: edge
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db/postgres
     depends_on:
