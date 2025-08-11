@@ -1,3 +1,4 @@
-
-</body>
-</html>
+<#macro content>
+    </body>
+    </html>
+</#macro>
