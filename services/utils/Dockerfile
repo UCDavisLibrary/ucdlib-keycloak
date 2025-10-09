@@ -3,7 +3,15 @@ FROM node:22
 RUN mkdir /kc-utils
 WORKDIR /kc-utils
 
-RUN apt-get update && apt-get install -y apt-transport-https ca-certificates gnupg curl cron procps
+RUN apt-get update && apt-get install -y \
+apt-transport-https \
+ca-certificates \
+gnupg \
+curl \
+cron \
+vim \
+lsb-release \
+procps
 
 # Prep work for gsutil
 RUN install -d -m 0755 /etc/apt/keyrings \
