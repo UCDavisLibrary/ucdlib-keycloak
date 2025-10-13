@@ -27,6 +27,7 @@ This tool helps developers test Keycloak authentication flows and visualize toke
 ```bash
 cd tools/test-app
 npm install
+npm run build
 ```
 
 ### 2. Configure Keycloak Client
