@@ -102,6 +102,40 @@ body {
     font-size: 18px;
 }
 
+.contact-us {
+    text-align: center;
+    padding-top: 0.5rem;
+    color: #022851;
+}
+
+.otp-device-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    row-gap: 0.75rem;
+    column-gap: 0.75rem;
+    margin-bottom: 1.19rem;
+}
+
+.otp-device-list input[type="radio"] {
+    margin: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.otp-device-list label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #022851;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.otp-device-list label i {
+    color: #022851;
+}
+
 .login-box .alert {
   margin-bottom: 1.19rem;
   border: 1px solid transparent;
