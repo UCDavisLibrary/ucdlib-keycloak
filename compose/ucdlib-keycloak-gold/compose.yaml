@@ -8,8 +8,10 @@ services:
       KC_HOSTNAME: ${KC_HOSTNAME:-auth.library.ucdavis.edu}
       KC_PROXY_HEADERS: ${KC_PROXY_HEADERS:-xforwarded}
       KC_HTTP_ENABLED: ${KC_HTTP_ENABLED:-true}
+      KC_HTTP_MANAGEMENT_HEALTH_ENABLED: false
       KC_HEALTH_ENABLED: true
       KC_METRICS_ENABLED: true
+      KC_LEGACY_OBSERVABILITY_INTERFACE: true
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db/postgres
     depends_on:
