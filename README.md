@@ -31,7 +31,7 @@ If you need to test out auth flows or inspect tokens, you can use the applicatio
 - Like other ucd library deployments, there are two alternating production versions: blue and gold
   - If we are currently running blue, the new version will be gold and vice-versa
   - To determine which cluster is currently running, run `docker ps` and look in the `NAMES` column
-- `cd /opt/ucdlib-keycloak/compose/ucdlib-keycloak-<new-color>` and run `git pull` then `docker compose pull` to retrieve the newly  built images
+- `cd /opt/ucdlib-keycloak/compose/ucdlib-keycloak-<new-color>` and run `git pull` then `docker compose pull` to retrieve the newly  built images. Before you pull, ensure you are on the correct branch and that the version number in the compose file is what you expect.
 - run `docker compose down -v` and then `docker compose up -d`
 - Follow along with logs to make sure keycloak starts successfully and hydrates its volume: `docker compose logs init keycloak -f`
 - Navigate to the apache config directory: `cd /etc/httpd/conf.d`

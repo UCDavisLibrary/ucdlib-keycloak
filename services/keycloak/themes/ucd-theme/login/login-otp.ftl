@@ -12,7 +12,7 @@
         method="post">
         <#if otpLogin.userOtpCredentials?size gt 1>
             <div class="${properties.kcFormGroupClass!}">
-                <div class="${properties.kcInputWrapperClass!}">
+                <div class="${properties.kcInputWrapperClass!} otp-device-list">
                     <#list otpLogin.userOtpCredentials as otpCredential>
                         <input id="kc-otp-credential-${otpCredential?index}" class="${properties.kcLoginOTPListInputClass!}" type="radio" name="selectedCredentialId" value="${otpCredential.id}" <#if otpCredential.id == otpLogin.selectedCredentialId>checked="checked"</#if>>
                         <label for="kc-otp-credential-${otpCredential?index}" class="${properties.kcLoginOTPListClass!}" tabindex="${otpCredential?index}">
@@ -57,6 +57,8 @@
                     class="btn btn--primary btn--block"
                     name="login" id="kc-login" type="submit" value="${msg("doLogIn")}" />
             </div>
+
+            <div class="contact-us">${msg("ucdContactUsHtml")?no_esc}</div>
         </div>
     </form>
 </div>
