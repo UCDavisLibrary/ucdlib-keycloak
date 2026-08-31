@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:26.7.2 as keycloak
+FROM quay.io/keycloak/keycloak:26.7.3 as keycloak
 
 COPY themes/ucd-theme /opt/keycloak/themes/ucd-theme
 
